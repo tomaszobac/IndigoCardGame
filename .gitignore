@@ -1,0 +1,16 @@
+# course config files
+*.yaml
+
+# gradle
+.gradle/
+build
+
+
+# idea config
+.idea
+
+# old stages
+/Indigo Card Game/*
+!/Indigo Card Game/task/
+/Indigo Card Game/task/*
+!/Indigo Card Game/task/src
