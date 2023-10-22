@@ -18,7 +18,7 @@ class Computer(override val name: String) : Player {
         return playAlgorithm(table)
     }
 
-    fun playAlgorithm(table: Table): Int {
+    private fun playAlgorithm(table: Table): Int {
         if (this.hand.size == 1) {
             var win = false
             if (table.placedCards.isNotEmpty()) {
@@ -37,29 +37,33 @@ class Computer(override val name: String) : Player {
                     table.placedCards.last().dropLast(1) == it.dropLast(1)) candidates += it
             }
 
-            if (candidates.size == 0)
-                return noWinOption(table)
+            if (candidates.size == 0) {
+                noWinOption(table)
+                return 0
+            }
 
             if (candidates.size == 1) {
                 throwCard(table, candidates[0])
                 return 1
             }
 
-            return winOption(table, candidates)
+            winOption(table, candidates)
+            return 1
 
         }
 
-        return noWinOption(table)
+        noWinOption(table)
+        return 0
     }
 
-    private fun noWinOption(table: Table): Int {
+    private fun noWinOption(table: Table) {
         this.hand.filter {
             val occurrences = this.hand.count { item -> item.last() == it.last() }
             occurrences > 1
         }.also {
             if (it.isNotEmpty()) {
                 throwCard(table, it.random())
-                return 0
+                return
             } }
 
         if (this.hand.size <= 4) {
@@ -69,22 +73,22 @@ class Computer(override val name: String) : Player {
             }.also {
                 if (it.isNotEmpty()) {
                     throwCard(table, it.random())
-                    return 0
+                    return
                 } }
         }
 
         throwCard(table, this.hand.random())
-        return 0
+        return
     }
 
-    private fun winOption(table: Table, candidates: MutableList<String>): Int {
+    private fun winOption(table: Table, candidates: MutableList<String>) {
         candidates.filter {
             val occurrences = candidates.count { item -> item.last() == it.last() }
             occurrences > 1
         }.also {
             if (it.isNotEmpty()) {
                 throwCard(table, it.random())
-                return 1
+                return
         } }
 
         candidates.filter {
@@ -93,11 +97,11 @@ class Computer(override val name: String) : Player {
         }.also {
             if (it.isNotEmpty()) {
                 throwCard(table, it.random())
-                return 1
+                return
         } }
 
         throwCard(table, candidates.random())
-        return 1
+        return
     }
 
     private fun throwCard(table: Table, card: String) {
